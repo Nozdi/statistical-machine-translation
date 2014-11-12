@@ -1,4 +1,4 @@
 statistical-machine-translation
 ===============================
 
-IBM models implementation in python
+IBM models implementation in python (pypy)
