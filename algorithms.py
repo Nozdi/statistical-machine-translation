@@ -2,6 +2,8 @@
 .. module:: algorithms
     :synopsis: Module which contains IBM Models algorithms
 """
+import operator
+import math
 from collections import defaultdict
 from itertools import (
     chain,
@@ -15,6 +17,19 @@ def load_sentences(source_file, destination_file):
         f = [line.lower().split() + ["NULL"] for line in source]
 
     return e, f
+
+
+def perplexity(t, e_sentences, f_sentences, eps=1.):
+    probabilities = []
+    for e_words, f_words in izip(e_sentences, f_sentences):
+        probabilities.append(
+            eps/(len(f_words)**len(e_words)) *
+            reduce(
+                operator.mul,
+                [sum([t[(f, e)] for f in f_words]) for e in e_words]
+            )
+        )
+    return 2**-sum(map(lambda x: math.log(x, 2), probabilities))
 
 
 def model1(source_file, destination_file, iterations):
@@ -49,4 +64,5 @@ def model1(source_file, destination_file, iterations):
         for f in all_f_words:
             for e in all_e_words:
                 t[(f, e)] = count[(f, e)]/total[f]
-    return t
+
+    return t, perplexity(t, e_sentences, f_sentences)

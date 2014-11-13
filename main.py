@@ -9,8 +9,10 @@ if __name__ == '__main__':
     parser.add_argument('iterations', type=int)
 
     args = parser.parse_args()
-    t = model1(args.source_file, args.destination_file, args.iterations)
+    t, perplexity = model1(args.source_file, args.destination_file, args.iterations)
 
     for translation, value in t.iteritems():
         if value >= 0.001:
-            print("%s    %s    %.4f" % (translation + (value,)))
+            print"%s    %s    %.4f" % (translation + (value,))
+
+    print "\nperplexity(eps=1): %.1f" % perplexity,
