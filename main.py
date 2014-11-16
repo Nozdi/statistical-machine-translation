@@ -13,6 +13,6 @@ if __name__ == '__main__':
 
     for translation, value in t.iteritems():
         if value >= 0.001:
-            print"%s    %s    %.4f" % (translation + (value,))
+            print "%s    %s    %.4f" % (translation + (value,))
 
     print "\nperplexity(eps=1): %.1f" % perplexity,

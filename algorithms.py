@@ -4,6 +4,7 @@
 """
 import operator
 import math
+from decimal import Decimal
 from collections import defaultdict
 from itertools import (
     chain,
@@ -29,7 +30,7 @@ def perplexity(t, e_sentences, f_sentences, eps=1.):
                 [sum([t[(f, e)] for f in f_words]) for e in e_words]
             )
         )
-    return 2**-sum(map(lambda x: math.log(x, 2), probabilities))
+    return 2 ** Decimal(-sum(map(lambda x: math.log(x, 2), probabilities)))
 
 
 def model1(source_file, destination_file, iterations):
