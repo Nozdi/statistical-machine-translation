@@ -40,10 +40,10 @@ def model1(source_file, destination_file, iterations):
     all_e_words = frozenset(chain(*e_sentences))
     all_f_words = frozenset(chain(*f_sentences))
 
-    t = {e: defaultdict(lambda: 0.25) for e in all_e_words}
+    t = {e: {f: 0.25 for f in all_f_words} for e in all_e_words}
 
     for _ in xrange(iterations):
-        count = {e: defaultdict(float) for e in all_e_words}
+        count = {e: {f: 0. for f in all_f_words} for e in all_e_words}
         total = defaultdict(float)
         s_total = defaultdict(float)
 
