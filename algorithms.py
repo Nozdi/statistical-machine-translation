@@ -27,7 +27,7 @@ def perplexity(t, e_sentences, f_sentences, eps=1.):
             eps/(len(f_words)**len(e_words)) *
             reduce(
                 operator.mul,
-                [sum([t[(f, e)] for f in f_words]) for e in e_words]
+                [sum([t[e][f] for f in f_words]) for e in e_words]
             )
         )
     return 2 ** Decimal(-sum(map(lambda x: math.log(x, 2), probabilities)))
@@ -37,13 +37,13 @@ def model1(source_file, destination_file, iterations):
     # initialization
     e_sentences, f_sentences = load_sentences(source_file, destination_file)
 
-    all_e_words = set(chain(*e_sentences))
-    all_f_words = set(chain(*f_sentences))
+    all_e_words = frozenset(chain(*e_sentences))
+    all_f_words = frozenset(chain(*f_sentences))
 
-    t = defaultdict(lambda: 0.25)
+    t = {e: defaultdict(lambda: 0.25) for e in all_e_words}
 
     for _ in xrange(iterations):
-        count = defaultdict(float)
+        count = {e: defaultdict(float) for e in all_e_words}
         total = defaultdict(float)
         s_total = defaultdict(float)
 
@@ -52,18 +52,18 @@ def model1(source_file, destination_file, iterations):
             for e in e_words:
                 s_total[e] = 0
                 for f in f_words:
-                    s_total[e] += t[(f, e)]
+                    s_total[e] += t[e][f]
 
             # collect counts
             for e in e_words:
                 for f in f_words:
-                    counts = t[(f, e)]/s_total[e]
-                    count[(f, e)] += counts
+                    counts = t[e][f]/s_total[e]
+                    count[e][f] += counts
                     total[f] += counts
 
         # estimate probabilities
         for f in all_f_words:
             for e in all_e_words:
-                t[(f, e)] = count[(f, e)]/total[f]
+                t[e][f] = count[e][f]/total[f]
 
     return t, perplexity(t, e_sentences, f_sentences)

@@ -11,8 +11,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
     t, perplexity = model1(args.source_file, args.destination_file, args.iterations)
 
-    for translation, value in t.iteritems():
-        if value >= 0.001:
-            print "%s    %s    %.4f" % (translation + (value,))
+    for e, f_dict in t.iteritems():
+        for f, value in f_dict.iteritems():
+            if value >= 0.001:
+                print "%s    %s    %.4f" % (f, e, value)
 
     print "\nperplexity(eps=1): %.1f" % perplexity,
